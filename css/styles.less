@@ -2,8 +2,8 @@
 @headerHeight: 300px;
 @footerHeight: 200px;
 @buttonColor: #ffa71d;
-@infoTextColor: #717171;
-@infoBackground: white; /*url('../images/info.jpg');*/
+@infoTextColor: #ffffff;
+@infoBackground: #606db2; /*url('../images/info.jpg');*/
 
 
 /* Set these custom variables */
@@ -27,7 +27,7 @@ body {
 	overflow-x:hidden;
 	overflow-y: auto;
 	font-family: sans-serif;
-	background-image: url('images/info.jpg');
+	background-color: black;
 }
 img {
 	vertical-align: bottom;
@@ -62,9 +62,9 @@ img {
 	min-width:640px;
 	max-width:640px;
 	height:840px;
-	background:gray;
 	position:relative;
 	overflow:hidden;
+	margin: 0 auto;
 }
 #MapToolbar {
 	display:block;
@@ -99,6 +99,19 @@ img {
 
 /* ======== LOCATION CHOICE STYLES ========== */
 
+#MapSearch {
+	margin:100px auto;
+	height:42px;
+	width: 400px;
+	position:relative;
+}
+.popover	{ 
+	-webkit-border-radius:8px;
+	-webkit-box-shadow:0px 4px 7px rgba(0,0,0,0.3);
+	padding:10px;
+	background:white;
+	position:relative;
+}
 .dc-button { 
 	display:inline-block;
 	padding:10px;
@@ -159,13 +172,6 @@ img {
 	max-width: 390px;
 	overflow: hidden;
 }
-.popover	{ 
-	-webkit-border-radius:8px;
-	-webkit-box-shadow:0px 4px 7px rgba(0,0,0,0.3);
-	padding:10px;
-	background:white;
-	position:relative;
-}
 .title {
   	font: normal 24px Helvetica, sans-serif;
   	font-weight: bold;
@@ -182,9 +188,7 @@ img {
 	margin:0 0 0.6em;
 	clear: both;
 }
-#MapSearch {
-	margin:100px auto;
-	height:42px;
-	width: 400px;
-	position:relative;
+.storeButtons {
+	float: right;
+	margin-right: 15px;
 }
