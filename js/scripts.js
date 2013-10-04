@@ -1,8 +1,8 @@
-var storeName = "Petsmart";
+var storeName = "Starbucks";
 
 var img_srcs = [
-    'images/header.jpg',
-    'images/footer.jpg'
+    'images/header.png',
+    'images/footer.png'
 ];
 var imgs_to_load = img_srcs.length
 
