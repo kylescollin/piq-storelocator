@@ -1,5 +1,10 @@
 var storeName = "Starbucks";
 
+var placeResults;
+var service;
+var targetLocation;
+
+
 var img_srcs = [
     'images/header.png',
     'images/footer.png'
@@ -26,10 +31,10 @@ window.onload = function(){
 		document.body.appendChild(img);
 	}
 	
-	if(typeof google == "object") {
-	    google.load("maps", "3",  { other_params:"sensor=true", "callback" : itemLoaded });
-		google.load("search", "1", {"nocss" : true, "callback" : itemLoaded });
-	}
+//	if(typeof google == "object") {
+//	    google.load("maps", "3",  { other_params:"sensor=true", "callback" : itemLoaded });
+//		google.load("search", "1", {"nocss" : true, "callback" : itemLoaded });
+//	}
 }
 function start() {
 	AdController();
@@ -38,20 +43,28 @@ function start() {
 function AdController() {
 	var me = null;
 	var custom = false;
-	var kansas = new google.maps.LatLng(37.4419, -100.1419);
-	
-	if (google.loader.ClientLocation) {
-		kansas = new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);
-	}
-	var mapOptions = {
-        zoom: 5,
-        center: kansas,
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
-        mapTypeControl: false
-    };
-	var myMap = new google.maps.Map(document.getElementById("map"),mapOptions);
-    var mySearch = new google.search.LocalSearch();
-    
+//	var kansas = new google.maps.LatLng(37.4419, -100.1419);
+    var nyu = new google.maps.LatLng(40.729371, -73.995906);
+
+    targetLocation = nyu;
+
+//	if (google.loader.ClientLocation) {
+//		nyu = new google.maps.LatLng(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);
+//	}
+//	var mapOptions = {
+//        zoom: 13,
+//        center: nyu,
+//        mapTypeId: google.maps.MapTypeId.ROADMAP,
+//        mapTypeControl: false
+//    };
+//	var myMap = new google.maps.Map(document.getElementById("map"),mapOptions);
+	var myMap = new google.maps.Map(document.getElementById("map"),{
+        center: nyu,
+        zoom: 15
+    });
+
+    service = new google.maps.places.PlacesService(myMap);
+
     var myloc = new google.maps.Marker({
 		clickable: false,
 		icon: new google.maps.MarkerImage('http://maps.gstatic.com/mapfiles/mobile/mobileimgs2.png',
@@ -139,18 +152,30 @@ function AdController() {
 	}
 	
 	function findResults() {
-		mySearch.setCenterPoint(myMap.getCenter());
-		mySearch.execute(storeName);
+        var request = {
+            location: targetLocation,
+            radius: '500',
+//        types: ['store']
+            keyword: storeName
+        };
+        service.nearbySearch(request, callBack);
 	}
+
+    function callBack(results, status){
+        if (status == google.maps.places.PlacesServiceStatus.OK) {
+            placeResults = results
+            searchComplete()
+            }
+        }
 	
 	function markerClick(e) {
 		var index = activeMarkers.indexOf(this);
 		myMap.panTo(this.position);
-		showResult(mySearch.results[index]);
+		showResult(placeResults[index]);
 	}
 	
 	function searchComplete() {
-		var results = mySearch.results;
+        var results = placeResults
 		
 		overlay.style.opacity = "0";
 		setTimeout(function() { overlay.style.display = "none"; },400);
@@ -169,7 +194,8 @@ function AdController() {
             // add new markers
             for(var i=0;i<results.length;i++) {
                 var marker = new google.maps.Marker({
-                    position: new google.maps.LatLng(results[i].lat,results[i].lng),
+//                    position: new google.maps.LatLng(results[i].lat,results[i].lng),
+                    position: new google.maps.LatLng(results[i].geometry.location.lat(),results[i].geometry.location.lng()),
                     map: myMap,
                     icon: 'images/pin.png'
                 });
@@ -186,19 +212,19 @@ function AdController() {
 	
 	function showResult(result) {
 		myMap.panBy(0,6);
-		var retailPosition = new google.maps.LatLng(result.lat,result.lng);
-		infoBox.getElementsByClassName("title")[0].innerHTML = result.titleNoFormatting;
-		if(result.phoneNumbers.length > 0) {
-			callButton.href = "tel://" + result.phoneNumbers[0].number.match(/\d/g).join("");
-			callButton.style.display = "inline-block";
-		} else {
+		var retailPosition = new google.maps.LatLng(result.geometry.location.lat(),result.geometry.location.lng());
+		infoBox.getElementsByClassName("title")[0].innerHTML = result.name;
+//		if(result.phoneNumbers.length > 0) {
+//			callButton.href = "tel://" + result.phoneNumbers[0].number.match(/\d/g).join("");
+//			callButton.style.display = "inline-block";
+//		} else {
 			callButton.style.display = "none";
-		}
+//		}
 		dirButton.href = result.ddUrl;
 		if(custom == false){
 			infoBox.getElementsByClassName("distance")[0].innerHTML = distHaversine(me,retailPosition) + " miles away";
 		}
-		infoBox.getElementsByClassName("address")[0].innerHTML = result.addressLines[0] + " " + result.addressLines[1];
+		infoBox.getElementsByClassName("address")[0].innerHTML = result.vicinity;
 		infoBox.style.display = "block";
 	}
 	
@@ -234,9 +260,7 @@ function AdController() {
 			},handleGeocoderResponse);
 		}
 	}
-	
-	mySearch.setSearchCompleteCallback(null,searchComplete);
-	
+
 	function activeStyle(e) {
 		this.className += " clicked";
 	}
