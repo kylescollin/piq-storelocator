@@ -91,6 +91,7 @@ function AdController() {
     var searching = false;
     var venueObject;
     var myLocObject;
+    var googleMapBaseUrl = 'http://maps.google.com/maps?'
 
     function getCurrentLocation() {
         loaderSpin.style.display = "block";
@@ -208,11 +209,15 @@ function AdController() {
             callButton.style.display = "none";
         }
 
-        var googleMapBaseUrl = 'http://maps.google.com/maps?'
-        dirButton.href =  googleMapBaseUrl + 'saddr=' + myLocObject.formatted_address + '&daddr=' + venueObject.formatted_address;
+        if(typeof(myLocObject) == 'undefined'){
+//            dirButton.href =  googleMapBaseUrl + 'saddr=(' + me.latitude + ',' + me.longitude + ')&daddr=' + venueObject.formatted_address;
+            dirButton.href =  googleMapBaseUrl + 'saddr=(' + myloc.map.center.ob + ',' + myloc.map.center.pb + ')&daddr=' + venueObject.formatted_address;
+        }else{
+            dirButton.href =  googleMapBaseUrl + 'saddr=' + myLocObject.formatted_address + '&daddr=' + venueObject.formatted_address;
+        }
 
         if(custom == false){
-            infoBox.getElementsByClassName("distance")[0].innerHTML = distHaversine(me,retailPosition) + " miles away";
+            infoBox.getElementsByClassName("distance")[0].innerHTML = distHaversine(new google.maps.LatLng(myloc.map.center.ob, myloc.map.center.pb),retailPosition) + " miles away";
         }
         infoBox.getElementsByClassName("address")[0].innerHTML = result.vicinity;
         infoBox.style.display = "block";
@@ -229,11 +234,6 @@ function AdController() {
                 showResult(result);
             }
         });
-    }
-
-    function getDirectionUrl(destination){
-        var googleMapBaseUrl = 'http://maps.google.com/maps?'
-        return googleMapBaseUrl + 'saddr=' + me.lat()+ ',' + me.lng() + 'daddr=' + destination.formatted_address
     }
 
     function toggleCustomLocation() {
