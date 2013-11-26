@@ -30,11 +30,6 @@ window.onload = function(){
 		img.addEventListener('load',itemLoaded,false);
 		document.body.appendChild(img);
 	}
-	
-//	if(typeof google == "object") {
-//	    google.load("maps", "3",  { other_params:"sensor=true", "callback" : itemLoaded });
-//		google.load("search", "1", {"nocss" : true, "callback" : itemLoaded });
-//	}
 }
 function start() {
 	AdController();
@@ -152,10 +147,10 @@ function AdController() {
 	}
 	
 	function findResults() {
+
         var request = {
-            location: targetLocation,
+            location: new google.maps.LatLng(myMap.getCenter().lat(),myMap.getCenter().lng()),
             radius: '500',
-//        types: ['store']
             keyword: storeName
         };
         service.nearbySearch(request, callBack);
