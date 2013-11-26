@@ -1,4 +1,4 @@
-var storeName = "Starbucks";
+var storeName = "starbucks";
 
 var placeResults;
 var service;
@@ -9,6 +9,7 @@ var img_srcs = [
     'images/header.png',
     'images/footer.png'
 ];
+
 var imgs_to_load = img_srcs.length
 
 window.onload = function(){
@@ -138,7 +139,6 @@ function AdController() {
     }
 
     function findResults() {
-
         var request = {
             location: new google.maps.LatLng(myMap.getCenter().lat(),myMap.getCenter().lng()),
             radius: '500',
@@ -196,12 +196,10 @@ function AdController() {
     }
 
     function showResult(result) {
-
         myMap.panBy(0,6);
         var retailPosition = new google.maps.LatLng(result.geometry.location.lat(),result.geometry.location.lng());
         infoBox.getElementsByClassName("title")[0].innerHTML = result.name;
 
-        //generate the phone button if phone number is available from getDetails();
         if(venueObject.formatted_phone_number != null) {
             callButton.href = "tel://" + venueObject.formatted_phone_number.match(/\d/g).join("");
             callButton.style.display = "inline-block";
@@ -210,7 +208,6 @@ function AdController() {
         }
 
         if(typeof(myLocObject) == 'undefined'){
-//            dirButton.href =  googleMapBaseUrl + 'saddr=(' + me.latitude + ',' + me.longitude + ')&daddr=' + venueObject.formatted_address;
             dirButton.href =  googleMapBaseUrl + 'saddr=(' + myloc.map.center.ob + ',' + myloc.map.center.pb + ')&daddr=' + venueObject.formatted_address;
         }else{
             dirButton.href =  googleMapBaseUrl + 'saddr=' + myLocObject.formatted_address + '&daddr=' + venueObject.formatted_address;
@@ -273,6 +270,7 @@ function AdController() {
     function activeStyle(e) {
         this.className += " clicked";
     }
+
     function inactiveStyle(e) {
         this.className = this.className.replace(" clicked","");
     }
