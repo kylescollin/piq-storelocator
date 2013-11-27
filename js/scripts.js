@@ -1,8 +1,8 @@
-var storeName = "walmart";
+var storeName = "hhgregg store";
 
-var keyWord = "walmart";
+var keyWord = "hhgregg";
 
-var venueTypes = ['grocery_or_supermarket',''];
+var venueTypes = ['electronics_store'];
 
 var placeResults;
 var service;
@@ -141,14 +141,11 @@ function AdController() {
         locateLink.className = locateLink.className.replace(" clicked");
     }
 
-    function getEmptyResult(err){}
-
-
     function findResults() {
         var request = {
 //            keyword: keyWord,
             name: storeName,
-            types: venueTypes,
+//            types: venueTypes,
             location: new google.maps.LatLng(myMap.getCenter().lat(),myMap.getCenter().lng()),
             rankBy: google.maps.places.RankBy.DISTANCE
 
@@ -160,6 +157,9 @@ function AdController() {
         if (status == google.maps.places.PlacesServiceStatus.OK) {
             placeResults = results
             searchComplete()
+        }
+        else{
+            alert("No results within 30 miles.");
         }
     }
 
