@@ -1,8 +1,9 @@
-var storeName = "starbucks";
+var storeName = "airport";
+//var storeName = "starbucks";
+//var storeName = "red lobster";
 
 var placeResults;
 var service;
-var targetLocation;
 
 
 var img_srcs = [
@@ -40,8 +41,6 @@ function AdController() {
     var me = null;
     var custom = false;
     var nyu = new google.maps.LatLng(40.729371, -73.995906);
-
-    targetLocation = nyu;
 
     var myMap = new google.maps.Map(document.getElementById("map"),{
         center: nyu,
@@ -91,7 +90,8 @@ function AdController() {
     var activeMarkers;
     var searching = false;
     var venueObject;
-    var myLocObject;
+    var targetLoc;
+    var myCurrentLoc;
     var googleMapBaseUrl = 'http://maps.google.com/maps?'
 
     function getCurrentLocation() {
@@ -113,6 +113,7 @@ function AdController() {
         var newCenter = new google.maps.LatLng(coords.latitude, coords.longitude);
         myMap.setZoom(13);
         myMap.setCenter(newCenter);
+        myCurrentLoc = position;
         findResults();
     }
 
@@ -140,9 +141,11 @@ function AdController() {
 
     function findResults() {
         var request = {
+            keyword: storeName,
+//            name: storeName,
             location: new google.maps.LatLng(myMap.getCenter().lat(),myMap.getCenter().lng()),
-            radius: '500',
-            keyword: storeName
+            rankBy: google.maps.places.RankBy.DISTANCE
+
         };
         service.nearbySearch(request, callBackForPlacesSearch);
     }
@@ -178,16 +181,22 @@ function AdController() {
             var bounds = new google.maps.LatLngBounds();
             activeMarkers = new Array();
             // add new markers
-            for(var i=0;i<results.length;i++) {
-                var marker = new google.maps.Marker({
-                    position: new google.maps.LatLng(results[i].geometry.location.lat(),results[i].geometry.location.lng()),
-                    map: myMap,
-                    icon: 'images/pin.png'
-                });
-                bounds.extend(marker.getPosition());
-                google.maps.event.addListener(marker, "click", markerClick);
-                activeMarkers[i] = marker;
-            }
+
+            var targetList;
+            if(results.length <= 5)
+                targetList = results;
+            else
+                targetList = results.slice(0,5);
+                for(var i=0;i<targetList.length;i++) {
+                    var marker = new google.maps.Marker({
+                        position: new google.maps.LatLng(results[i].geometry.location.lat(),results[i].geometry.location.lng()),
+                        map: myMap,
+                        icon: 'images/pin.png'
+                    });
+                    bounds.extend(marker.getPosition());
+                    google.maps.event.addListener(marker, "click", markerClick);
+                    activeMarkers[i] = marker;
+                }
             // move map
             myMap.fitBounds(bounds);
             // adjust zoom to a reasonable level
@@ -207,14 +216,14 @@ function AdController() {
             callButton.style.display = "none";
         }
 
-        if(typeof(myLocObject) == 'undefined'){
-            dirButton.href =  googleMapBaseUrl + 'saddr=(' + myloc.map.center.ob + ',' + myloc.map.center.pb + ')&daddr=' + venueObject.formatted_address;
+        if(typeof(targetLoc) == 'undefined'){
+            dirButton.href =  googleMapBaseUrl + 'saddr=(' + myCurrentLoc.coords.latitude + ',' + myCurrentLoc.coords.longitude + ')&daddr=' + venueObject.formatted_address;
         }else{
-            dirButton.href =  googleMapBaseUrl + 'saddr=' + myLocObject.formatted_address + '&daddr=' + venueObject.formatted_address;
+            dirButton.href =  googleMapBaseUrl + 'saddr=' + targetLoc.formatted_address + '&daddr=' + venueObject.formatted_address;
         }
 
         if(custom == false){
-            infoBox.getElementsByClassName("distance")[0].innerHTML = distHaversine(new google.maps.LatLng(myloc.map.center.ob, myloc.map.center.pb),retailPosition) + " miles away";
+            infoBox.getElementsByClassName("distance")[0].innerHTML = distHaversine(new google.maps.LatLng(myCurrentLoc.coords.latitude, myCurrentLoc.coords.longitude),retailPosition) + " miles away";
         }
         infoBox.getElementsByClassName("address")[0].innerHTML = result.vicinity;
         infoBox.style.display = "block";
@@ -249,7 +258,7 @@ function AdController() {
     function handleGeocoderResponse(results, status) {
         if(status == "OK") {
             myMap.fitBounds(results[0].geometry.viewport);
-            myLocObject = results[0];
+            targetLoc = results[0];
             findResults();
         } else {
             alert("Could not find location: "+status);
