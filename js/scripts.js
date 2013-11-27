@@ -1,6 +1,8 @@
-var storeName = "airport";
-//var storeName = "starbucks";
-//var storeName = "red lobster";
+var storeName = "walmart";
+
+var keyWord = "walmart";
+
+var venueTypes = ['grocery_or_supermarket',''];
 
 var placeResults;
 var service;
@@ -139,10 +141,14 @@ function AdController() {
         locateLink.className = locateLink.className.replace(" clicked");
     }
 
+    function getEmptyResult(err){}
+
+
     function findResults() {
         var request = {
-            keyword: storeName,
-//            name: storeName,
+//            keyword: keyWord,
+            name: storeName,
+            types: venueTypes,
             location: new google.maps.LatLng(myMap.getCenter().lat(),myMap.getCenter().lng()),
             rankBy: google.maps.places.RankBy.DISTANCE
 
