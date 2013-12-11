@@ -1,5 +1,5 @@
 //Set your GA Account
-var gaAccount='##########';
+var gaAccount='UA-45583562-23';
 
 //Do not edit 
 function trackEvent(el){

@@ -1,12 +1,12 @@
 /* Set these custom variables */
-@headerHeight: 300px;
-@footerHeight: 200px;
-@buttonColor: #ffa71d;
-@infoTextColor: #ffffff;
-@infoBackground: #606db2; /*url('../images/info.jpg');*/
+@buttonColor: #b32456;
+@headerBackground: url("../images/dots.jpg") repeat-x;
+@headerHeight: 322px;
+@footerBackground: #ffffff; /*url("../images/bottomRepeat.jpg") repeat-x*/
+@footerHeight: 0px;
+@infoTextColor: #000000;
+@infoBackground: #ffffff; /*url('../images/info.jpg');*/
 
-
-/* Set these custom variables */
 .grad (@buttonColor) { 
   background-color: #F07575; /* fallback color if gradients are not supported */
   background-image: -webkit-linear-gradient(top, lighten(@buttonColor,10%), darken(@buttonColor,10%)); /* For Chrome and Safari */
@@ -21,13 +21,17 @@
 	0% {-webkit-transform: rotate(0deg);}
 	100% {-webkit-transform: rotate(359deg);}
 }
+html {
+	height: 100%;
+}
 body {
 	padding:0px;
 	margin:0px;
 	overflow-x:hidden;
 	overflow-y: auto;
 	font-family: sans-serif;
-	background-color: black;
+	background-color: #ffffff;
+	height: 100%;
 }
 img {
 	vertical-align: bottom;
@@ -35,8 +39,8 @@ img {
 #loading {
 	display: none;
 	position: absolute;
-	width: 640px;
-	height: 400px;
+	width: 100%;
+	height: 100%;
 	text-align: center;
 	z-index: 99;
 	opacity: 0.5;
@@ -60,31 +64,58 @@ img {
 }
 #container {
 	min-width:640px;
-	max-width:640px;
-	height:840px;
+	max-width:100%;
+	height:100%;
 	position:relative;
 	overflow:hidden;
 	margin: 0 auto;
+	text-align: center;
 }
 #MapToolbar {
 	display:block;
 	position:relative;
-	width:640px;
+	width: 100%;
 	height: @headerHeight;
 	z-index:50;
-	float: left;
+	background: @headerBackground;
+	overflow: hidden;
+}
+#MapToolbarL {
+	display:block;
+	position:absolute;
+	top: 0px;
+	left: 0px;
+	height: 100%;
+	z-index:53;	
+}
+#MapToolbarC {
+	display:block;
+	position:absolute;
+	top: 0px;
+	height: 100%;
+	z-index:53;
+}
+#MapToolbarR {
+	display:block;
+	position:absolute;
+	top: 0px;
+	right: 0px;
+	height: 100%;
+	z-index:53;
 }
 #map {
 	width:100%;
-	height: 840 - @headerHeight - @footerHeight;
+	position: absolute;
+	top: @headerHeight;
+	bottom: @footerHeight;
 }
 #MapOverlay {
 	position:absolute;
 	float:left;
 	left: 0px;
-	top: @headerHeight;
+	top: 300px;
 	width:100%;
-	height: 840 - @headerHeight - @footerHeight;
+	height: 100%;
 	padding:0;
 	background-color:rgba(255,255,255,0.7);
 	-webkit-transition:opacity 0.4s linear;
@@ -93,7 +124,11 @@ img {
 	display:none;
 }
 #MapFooter {
+	width: 100%;
 	position: absolute;
+	overflow: hidden;
+	text-align: center;
+	background: @footerBackground;
 	bottom: 0px;
 }
 
@@ -156,15 +191,16 @@ img {
 #MapInfo {
 	display:none;
 	position:absolute;
-	top: 840 - 100 - @footerHeight;
+	bottom: @footerHeight;
 	-webkit-transition:bottom 1s ease-out;
 	left:0px;
-	width:600px;
-	height:88px;
-	padding:12px 0px 0px 40px;
+	width:100%;
+	height:100px;
+	padding:8px 0px 0px 40px;
 	background: @infoBackground;
-	font-size:24px;
+	font-size:20px;
 	color: @infoTextColor;
+	text-align: left;
 }
 .infoSection {
 	float: left;
@@ -173,22 +209,24 @@ img {
 	overflow: hidden;
 }
 .title {
-  	font: normal 24px Helvetica, sans-serif;
+  	font: normal 20px Helvetica, sans-serif;
   	font-weight: bold;
-	margin:10px 20px 5px 0px;
+	margin:5px 15px 5px 0px;
 	float: left;
+}
+.address {
+  	font: normal 17px Helvetica, sans-serif;
+	margin:0 0 0 0;
+	clear: both;
 }
 .distance {
 	float: left;
-  	font: italic 18px Helvetica, sans-serif;
-	margin:6px 0 0 0;
-}
-.address {
-  	font: normal 20px Helvetica, sans-serif;
-	margin:0 0 0.6em;
-	clear: both;
+  	font: italic 15px Helvetica, sans-serif;
+	padding-top:0px;
+	margin:3px 0px 0px 0px;
+
 }
 .storeButtons {
 	float: right;
-	margin-right: 15px;
+	margin-right: 10%;
 }

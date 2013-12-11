@@ -1,16 +1,22 @@
-var storeName = "walmart";
+var storeName = '"Nordstrom"';
 
-var keyWord = "walmart";
+//var keyWord = "Nordstrom";
 
-var venueTypes = ['grocery_or_supermarket'];
+var venueTypes = ['department_store'];
+//var venueTypes = ['establishment'];
+// ========= more types listed here: https://developers.google.com/places/documentation/supported_types ========== //
+
+var nameExcludeFilters = [new RegExp('rack','i'),new RegExp('design','i')]
 
 var placeResults;
 var service;
 
 
 var img_srcs = [
-    'images/header.png',
-    'images/footer.png'
+    'images/header.jpg',
+    //'images/left.png',
+    //'images/right.png',
+    //'images/footer.png'
 ];
 
 var imgs_to_load = img_srcs.length
@@ -95,6 +101,8 @@ function AdController() {
     var targetLoc;
     var myCurrentLoc;
     var googleMapBaseUrl = 'http://maps.google.com/maps?'
+    var filteredTargetList = [];
+
 
     function getCurrentLocation() {
         loaderSpin.style.display = "block";
@@ -141,12 +149,9 @@ function AdController() {
         locateLink.className = locateLink.className.replace(" clicked");
     }
 
-    function getEmptyResult(err){}
-
-
     function findResults() {
         var request = {
-//            keyword: keyWord,
+            //keyword: keyWord,
             name: storeName,
             types: venueTypes,
             location: new google.maps.LatLng(myMap.getCenter().lat(),myMap.getCenter().lng()),
@@ -156,22 +161,46 @@ function AdController() {
         service.nearbySearch(request, callBackForPlacesSearch);
     }
 
+    function filterResults(preFilterResults) {
+        // filter out results based on names, types, etc.
+        // using regex string pattern match
+        var postFilterResults = [];
+
+        for(var i=0; i<preFilterResults.length; i++){
+            var name = preFilterResults[i].name;
+            var j = 0
+            var tabooFound = false;
+            do{
+                tabooFound = nameExcludeFilters[j].test(name);
+                j ++;
+            }while(!tabooFound && j < (nameExcludeFilters.length))
+            if(!tabooFound){
+                postFilterResults.push(preFilterResults[i]);
+            }
+        }
+
+        return postFilterResults;
+    }
+
     function callBackForPlacesSearch(results, status){
         if (status == google.maps.places.PlacesServiceStatus.OK) {
-            placeResults = results
-            searchComplete()
+            placeResults = results;
+            searchComplete();
+        }
+        else{
+            alert("No results within 30 miles.");
         }
     }
 
     function markerClick(e) {
         var index = activeMarkers.indexOf(this);
         myMap.panTo(this.position);
-        getVenueDetail(placeResults[index])
+        getVenueDetail(filteredTargetList[index])
     }
 
     function searchComplete() {
-        var results = placeResults
-
+        filteredTargetList = filterResults(placeResults);
+        var results = filteredTargetList;
         overlay.style.opacity = "0";
         setTimeout(function() { overlay.style.display = "none"; },400);
 
@@ -183,7 +212,7 @@ function AdController() {
             }
         }
 
-        if(results.length) {
+        if(results.length > 0) {
             var bounds = new google.maps.LatLngBounds();
             activeMarkers = new Array();
             // add new markers
@@ -195,7 +224,7 @@ function AdController() {
                 targetList = results.slice(0,5);
                 for(var i=0;i<targetList.length;i++) {
                     var marker = new google.maps.Marker({
-                        position: new google.maps.LatLng(results[i].geometry.location.lat(),results[i].geometry.location.lng()),
+                        position: new google.maps.LatLng(targetList[i].geometry.location.lat(),targetList[i].geometry.location.lng()),
                         map: myMap,
                         icon: 'images/pin.png'
                     });
