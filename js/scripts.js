@@ -3,6 +3,7 @@ var storeName = "walmart";
 var keyWord = "walmart";
 
 var venueTypes = ['grocery_or_supermarket'];
+
 //https://developers.google.com/places/documentation/supported_types
 
 var placeResults;
