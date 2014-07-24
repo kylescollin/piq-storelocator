@@ -4,8 +4,10 @@ var keyWord = "walmart";
 
 var venueTypes = ['grocery_or_supermarket'];
 
+<<<<<<< HEAD
+=======
 //https://developers.google.com/places/documentation/supported_types
-
+>>>>>>> FETCH_HEAD
 var placeResults;
 var service;
 
@@ -217,17 +219,23 @@ function AdController() {
         infoBox.getElementsByClassName("title")[0].innerHTML = result.name;
 
         if(venueObject.formatted_phone_number != null) {
+<<<<<<< HEAD
             //changed from callButton.href for Google Analytics
             callButton.addEventListener("click", function(){trackOutboundLink('tel://' + venueObject.formatted_phone_number.match(/\d/g).join("")); return false;}, false);
+=======
+>>>>>>> FETCH_HEAD
             callButton.style.display = "inline-block";
         } else {
             callButton.style.display = "none";
         }
 
         if(typeof(targetLoc) == 'undefined'){
+<<<<<<< HEAD
             dirButton.addEventListener("click", function(){trackOutboundLink(googleMapBaseUrl + 'saddr=(' + myCurrentLoc.coords.latitude + ',' + myCurrentLoc.coords.longitude + ')&daddr=' + venueObject.formatted_address); return false;}, false);
         }else{
             dirButton.addEventListener("click", function(){trackOutboundLink(googleMapBaseUrl + 'saddr=' + targetLoc.formatted_address + '&daddr=' + venueObject.formatted_address); return false;}, false);
+=======
+>>>>>>> FETCH_HEAD
         }
 
         if(custom == false){
@@ -255,7 +263,10 @@ function AdController() {
         if(customLocationFields.style.display == "none") {
             customLink.className += " clicked";
             customLocationFields.style.display = "block";
+<<<<<<< HEAD
             searchForm.style.height = (searchForm.clientHeight + 70).toString() + "px";
+=======
+>>>>>>> FETCH_HEAD
         } else {
             customLink.className = customLink.className.replace(/ clicked/g,"");
             customLocationFields.style.display = "none";
