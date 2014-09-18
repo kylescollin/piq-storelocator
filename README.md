@@ -3,7 +3,7 @@ PlaceIQ Store Locator
 
 DESCRIPTION
 -----------
-This is a store locator mobile website, ideally served as a mobile ad. It has a fixed size of 640x840px, which translates to 320x420px size for non-retina phones. This will pull in a map of locations based on a Google Maps search term.
+This is a store locator mobile website, ideally served as a mobile ad. It is built to be retina ready utilizing double sized assets that should responsively fit for small screens as well. This unit populates a Google Map based on filtering through the Google Places API.
 
 
 USER FLOW
